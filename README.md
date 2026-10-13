@@ -1,111 +1,83 @@
-# GovBizConnect
+# GOVNIC / GovBizConnect
 
-A full-stack AI application that provides NIC (National Industrial Classification) code predictions and government scheme recommendations for businesses based on their descriptions.
+GovBizConnect is a full-stack application that predicts National Industrial Classification (NIC) codes from business descriptions and recommends potentially relevant government schemes.
 
-## Features
+## What it does
 
-- **NIC Code Prediction**: Uses a trained TF-IDF + SVM classifier to predict the most relevant NIC code
-- **Government Scheme Recommendations**: Provides top 5 government schemes based on semantic similarity
-- **Modern Web Interface**: Clean Streamlit frontend for easy interaction
-- **RESTful API**: FastAPI backend with structured endpoints
+- **NIC code prediction:** Uses a TF-IDF + SVM classifier to predict a relevant NIC code.
+- **Scheme recommendations:** Ranks government schemes using semantic similarity.
+- **Web interface:** Streamlit frontend for entering business descriptions and viewing results.
+- **API:** FastAPI backend with interactive API documentation.
 
-## Project Structure
+## Tech stack
 
-```
-GovBizConnect/
-├── backend/
-│   ├── main.py                 # FastAPI application
-│   ├── models/                 # Trained models and data
-│   │   ├── nic_classifier.pkl
-│   │   ├── scheme_embeddings.pkl
-│   │   └── scheme_metadata.pkl
-│   └── data/                   # Training datasets
-│       ├── nic_codes.csv
-│       └── govt_schemes.csv
-├── frontend/
-│   └── app.py                  # Streamlit application
-├── utils/
-│   ├── train_nic_classifier.py
-│   └── generate_scheme_embeddings.py
-├── requirements.txt
-└── README.md
+- **Backend:** Python, FastAPI, Uvicorn
+- **Frontend:** Streamlit
+- **Machine learning:** scikit-learn, TF-IDF, SVM, sentence-transformers
+- **Data processing:** pandas, NumPy
+
+## Repository layout
+
+```text
+backend/       API, model artifacts, and source datasets
+frontend/      Streamlit user interface
+utils/         Scripts for training the NIC classifier and generating embeddings
+requirements.txt
+run_app.py
+setup_mac.sh
+QUICKSTART.md
 ```
 
-## Installation
+## Setup
 
-### macOS Setup (Recommended)
+### Prerequisites
 
-1. Clone the repository
-2. Run the Mac setup script:
-   ```bash
-   ./setup_mac.sh
-   ```
-   This creates a virtual environment and installs all dependencies.
+- Python 3.8 or newer
+- `pip`
+- Internet access for installing Python packages and downloading any required model assets
 
-### Manual Installation
+### Recommended quick start on macOS
 
-1. Clone the repository
-2. Create and activate virtual environment:
-   ```bash
-   python3 -m venv venv
-   source venv/bin/activate
-   ```
-3. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
+```bash
+git clone https://github.com/GitnamanHub/GOVNIC.git
+cd GOVNIC
+chmod +x setup_mac.sh
+./setup_mac.sh
+source venv/bin/activate
+python run_app.py
+```
 
-## Usage
+The setup script is intended to create a virtual environment, install dependencies, and prepare the model artifacts. If you prefer manual setup, follow [QUICKSTART.md](QUICKSTART.md).
 
-### Training Models
+### Access the application
 
-1. Train the NIC classifier:
+When both services start successfully:
 
-   ```bash
-   source venv/bin/activate
-   python utils/train_nic_classifier.py
-   ```
+- **Streamlit frontend:** http://localhost:8501
+- **FastAPI:** http://localhost:8000
+- **Interactive API docs:** http://localhost:8000/docs
 
-2. Generate scheme embeddings:
-   ```bash
-   source venv/bin/activate
-   python utils/generate_scheme_embeddings.py
-   ```
+To run the backend and frontend separately, see the manual instructions in [QUICKSTART.md](QUICKSTART.md).
 
-### Running the Application
+## API overview
 
-1. Start the FastAPI backend:
+The README documents these endpoints:
 
-   ```bash
-   source venv/bin/activate
-   cd backend
-   uvicorn main:app --reload
-   ```
+- `POST /get_nic` — predicts an NIC code from a business description.
+- `POST /get_schemes` — returns scheme recommendations for a business description.
 
-2. Start the Streamlit frontend:
+Open the interactive API docs after starting the backend to inspect the current request and response schemas.
 
-   ```bash
-   source venv/bin/activate
-   cd frontend
-   streamlit run app.py
-   ```
+## Current limitations to communicate clearly
 
-3. Open your browser and navigate to `http://localhost:8501`
+Predictions and scheme recommendations are model outputs, not official eligibility decisions or government advice. Users should verify NIC classifications and scheme requirements with authoritative sources before relying on the results.
 
-## API Endpoints
+## Development notes
 
-- `POST /get_nic`: Get NIC code prediction
+- Python bytecode, virtual environments, editor folders, and macOS Finder metadata are local artifacts and should not be committed.
+- The repository includes generated model artifacts under `backend/models/`; keep these only if they are intentionally versioned for reproducibility and deployment.
+- Keep datasets and model artifacts documented with their source, license, date, and regeneration steps.
 
-  - Input: `{"description": "business description"}`
-  - Output: `{"nic_code": "predicted_code", "confidence": 0.95}`
+## License and data
 
-- `POST /get_schemes`: Get government scheme recommendations
-  - Input: `{"description": "business description"}`
-  - Output: `{"schemes": [{"name": "scheme_name", "description": "scheme_desc", "similarity": 0.85}]}`
-
-## Technologies Used
-
-- **Backend**: FastAPI, scikit-learn, sentence-transformers
-- **Frontend**: Streamlit
-- **ML Models**: TF-IDF + SVM classifier, Sentence embeddings
-- **Data Processing**: Pandas, NumPy
+Add the project license and explicit dataset/model provenance before inviting reuse. Confirm redistribution rights for the datasets and any derived artifacts.
